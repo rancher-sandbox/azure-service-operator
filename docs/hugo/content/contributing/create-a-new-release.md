@@ -171,7 +171,7 @@ If you earlier [catalogued breaking changes](#catalog-breaking-changes), or if t
 
 ## Create a blog post
 
-Publish a new blog post under `docs/hugo/content/blogs` covering changes in the new release. Publish the blog post alongside the corresponding ASO release.
+Publish a new blog post under `docs/hugo/content/blogs` covering changes in the new release. Aim to publish the blog post alongside the corresponding ASO version's release date.
 
 Sections to cover:
 
