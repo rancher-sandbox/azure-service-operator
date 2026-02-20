@@ -75,6 +75,6 @@ Before issuing a DELETE request to Azure, [ASO now checks](https://github.com/Az
 
 ## 🙏 Thank You
 
-Thank you to all our contributors for making this release possible! We're especially grateful to [bingikarthik](https://github.com/bingikarthik) and [subhamrajvanshi](https://github.com/shubhamrajvanshi) for their contributions to this release.
+Thank you to all our contributors for making this release possible! A special thanks goes to [bingikarthik](https://github.com/bingikarthik) and [subhamrajvanshi](https://github.com/shubhamrajvanshi) for their contributions to this release.
 
 **Full Changelog**: [v2.17.0...v2.18.0](https://github.com/Azure/azure-service-operator/compare/v2.17.0...v2.18.0)
