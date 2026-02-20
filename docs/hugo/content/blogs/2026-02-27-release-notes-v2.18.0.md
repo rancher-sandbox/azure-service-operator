@@ -13,6 +13,9 @@ The `storage` group now supports [hybrid API versioning](https://github.com/Azur
 
 ASO now issues a fresh `GET` on the owner ARM resource before calling `PreReconcileOwnerCheck`, ensuring the check always operates on the latest owner status ([#5140](https://github.com/Azure/azure-service-operator/pull/5140)). The `owner` parameter has also been removed from `PreReconcileCheck` to enforce a cleaner separation of concerns between the two extension points.
 
+Support for the `allowMultiEnvManagement` configuration flag allows per-namespace/per-resource Azure cloud environment settings, allowing uesrs to manage resources across different Azure clouds/environments. 
+- Special thanks to [subhamrajvanshi](https://github.com/shubhamrajvanshi) for this contribution.
+
 ## ⚠️ Breaking changes
 
 This release includes breaking changes. Please review the [breaking changes documentation](https://azure.github.io/azure-service-operator/guide/breaking-changes/) before upgrading.
@@ -41,6 +44,28 @@ Several `insights` resources now use their latest ARM API versions ([#5136](http
 - **DataCollectionEndpoint**, **DataCollectionRule**, and **DataCollectionRuleAssociation** now target API version `2024-03-11`
 - **ScheduledQueryRule** now targets `2025-01-01-preview`
 
+### Added support for resources under AppConfiguration
+
+New [AppConfiguration child resources](https://github.com/Azure/azure-service-operator/pull/4948) using the latest 2024-06-01 API version have been added to address the requests for KeyValue management capabilities. These resources include `KeyValue`, `Replica`, and `Snapshot`.
+
+### MySQL Server version flexibility
+
+The `Version` value for `dbformysql.FlexibleServer` [has been changed](https://github.com/Azure/azure-service-operator/pull/5195) to a simple string to allow new server versions to be used without the need for an API upgrade.
+
+## 🛡️ Operational Resilience
+
+### Improved retry on errors
+
+ASO no longer gives up [retrying on common Azure errors](https://github.com/Azure/azure-service-operator/pull/5092), improving reliability for long-running operations in ASO. ASO will currently still give up retrying on some well-known non-retryable errors.
+
+### Smarter deletes
+
+Before issuing a DELETE request to Azure, [ASO now checks](https://github.com/Azure/azure-service-operator/pull/5040) if the resource or the resource's parent has already been removed.
+
+### Remove usage of `NewDefaultAzureCredential`
+
+`NewDefaultAzureCredential` is replaced with `NewChainedTokenCredential` alongside a more [limited set of credentials](https://github.com/Azure/azure-service-operator/pull/5155). Authentication options that were removed were generally not recommended for running in production.
+
 ## 🐛 Bug fixes
 
 - [The Helm chart metrics port is now fully configurable](https://github.com/Azure/azure-service-operator/pull/5156). Previously, the `metrics.port` value in `values.yaml` was ignored in favor of a hardcoded `8443`.
@@ -50,6 +75,6 @@ Several `insights` resources now use their latest ARM API versions ([#5136](http
 
 ## 🙏 Thank You
 
-Thank you to all our contributors for making this release possible! We're especially grateful to [bingikarthik](https://github.com/bingikarthik)for the contribution to this release.
+Thank you to all our contributors for making this release possible! We're especially grateful to [bingikarthik](https://github.com/bingikarthik) and [subhamrajvanshi](https://github.com/shubhamrajvanshi) for their contributions to this release.
 
 **Full Changelog**: [v2.17.0...v2.18.0](https://github.com/Azure/azure-service-operator/compare/v2.17.0...v2.18.0)
