@@ -72,6 +72,7 @@ Before issuing a DELETE request to Azure, [ASO now checks](https://github.com/Az
   - _Special thanks to [bingikarthik](https://github.com/bingikarthik) for the contribution!_
 - [Replaced `NewDefaultAzureCredential` with a narrowly scoped credential chain](https://github.com/Azure/azure-service-operator/pull/5155), improving security and predictability of authentication behavior for both the controller and `asoctl`.
 - [Fixed the RoleDefinition cache](https://github.com/Azure/azure-service-operator/pull/5133) to ensure deterministic test behavior when well-known RoleDefinition names like `Contributor` are referenced.
+- 4 known cases where the ARM ID properties were released [without being properly tagged-as/converted-to](https://github.com/Azure/azure-service-operator/pull/4925) `KnownResourceReference` structs were fixed. To [avoid potential breakage](https://github.com/Azure/azure-service-operator/pull/4925), users can add the correct `ResourceReference` property alongside the legacy property.
 
 ## 🙏 Thank You
 
