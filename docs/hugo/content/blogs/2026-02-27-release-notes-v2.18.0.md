@@ -17,6 +17,10 @@ Support for the `allowMultiEnvManagement` configuration flag allows per-namespac
 
 - Special thanks to [subhamrajvanshi](https://github.com/shubhamrajvanshi) for this contribution.
 
+ASO no longer gives up [retrying on common Azure errors](https://github.com/Azure/azure-service-operator/pull/5092), improving reliability for long-running operations in ASO. ASO will currently still give up retrying on some well-known non-retryable errors.
+
+Before issuing a DELETE request to Azure, [ASO may now check](https://github.com/Azure/azure-service-operator/pull/5040) if the resource or the resource's parent has already been removed. We will progressively enable this for all resources over the next few releases.
+
 ## ⚠️ Breaking changes
 
 This release includes breaking changes. Please review [breaking changes in v2.18](https://azure.github.io/azure-service-operator/guide/breaking-changes/breaking-changes-v2.18.0/) before upgrading.
@@ -29,49 +33,26 @@ In [ASO v2.19](https://github.com/Azure/azure-service-operator/milestone/38), we
 
 ## 🎉 New and improved resource support
 
-### New AKS preview API version
-
 You can now use the latest AKS preview features through [containerservice v20251002preview](https://github.com/Azure/azure-service-operator/pull/5170).
-
-### Updated insights API versions
 
 Several `insights` resources now use their latest ARM API versions ([#5136](https://github.com/Azure/azure-service-operator/pull/5136)):
 
 - **DataCollectionEndpoint**, **DataCollectionRule**, and **DataCollectionRuleAssociation** now target API version `2024-03-11`
 - **ScheduledQueryRule** now targets `2025-01-01-preview`
 
-### Added support for resources under AppConfiguration
-
 New [AppConfiguration child resources](https://github.com/Azure/azure-service-operator/pull/4948) using the latest 2024-06-01 API version have been added to address the requests for KeyValue management capabilities. These resources include `KeyValue`, `Replica`, and `Snapshot`.
 
-### MySQL Server version flexibility
-
 The `Version` value for `dbformysql.FlexibleServer` [has been changed](https://github.com/Azure/azure-service-operator/pull/5195) to a simple string to allow new server versions to be used without the need for an API upgrade.
-
-## 🛡️ Operational Resilience
-
-### Improved retry on errors
-
-ASO no longer gives up [retrying on common Azure errors](https://github.com/Azure/azure-service-operator/pull/5092), improving reliability for long-running operations in ASO. ASO will currently still give up retrying on some well-known non-retryable errors.
-
-### Smarter deletes
-
-Before issuing a DELETE request to Azure, [ASO may now check](https://github.com/Azure/azure-service-operator/pull/5040) if the resource or the resource's parent has already been removed. We will progressively enable this for all resources over the next few releases.
-
-### Limiting credentials
-
-We have improved the security of ASO and `asoctl` by limiting the credentials used for authentication. Use of `NewDefaultAzureCredential` has been replaced with `NewChainedTokenCredential` alongside a more [limited set of credentials](https://github.com/Azure/azure-service-operator/pull/5155). Authentication options that were removed were generally not recommended for running in production.
 
 ## 🐛 Bug fixes
 
 - [The Helm chart metrics port is now fully configurable](https://github.com/Azure/azure-service-operator/pull/5156). Previously, the `metrics.port` value in `values.yaml` was ignored in favor of a hardcoded `8443`.
   - _Special thanks to [bingikarthik](https://github.com/bingikarthik) for the contribution!_
-- [Replaced `NewDefaultAzureCredential` with a narrowly scoped credential chain](https://github.com/Azure/azure-service-operator/pull/5155), improving security and predictability of authentication behavior for both the controller and `asoctl`.
-- [Fixed the RoleDefinition cache](https://github.com/Azure/azure-service-operator/pull/5133) to ensure deterministic test behavior when well-known RoleDefinition names like `Contributor` are referenced.
+  -
 - 4 known cases where the ARM ID properties were released [without being properly tagged-as/converted-to](https://github.com/Azure/azure-service-operator/pull/4925) `KnownResourceReference` structs were fixed. To [avoid potential breakage](https://github.com/Azure/azure-service-operator/pull/4925), users can add the correct `ResourceReference` property alongside the legacy property.
 
 ## 🙏 Thank You
 
 Thank you to all our contributors for making this release possible! A special thanks goes to [bingikarthik](https://github.com/bingikarthik) and [subhamrajvanshi](https://github.com/shubhamrajvanshi) for their contributions to this release.
 
-**Full Changelog**: [v2.17.0...v2.18.0](https://github.com/Azure/azure-service-operator/compare/v2.17.0...v2.18.0)
+See the [**Full Release notes**](https://github.com/Azure/azure-service-operator/releases/tag/v2.18.0) on GitHub.
