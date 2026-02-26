@@ -9,25 +9,21 @@ We're excited to announce the release of Azure Service Operator v2.18.0! This re
 
 ## 🎇 Headline Features
 
-The `storage` group now supports [hybrid API versioning](https://github.com/Azure/azure-service-operator/pull/5116). You can use all storage resources with the new `v` prefix, while the legacy `v1api` versions remain available for backward compatibility. This continues our broader transition toward simplified versioning across all resource groups.
+The `storage` group now supports [simplified API versioning](https://github.com/Azure/azure-service-operator/pull/5116). You can use all storage resources with the new `v` prefix, while the legacy `v1api` versions remain available for backward compatibility. This continues our transition toward simplified versioning across all resource groups (see [#4831](https://github.com/Azure/azure-service-operator/issues/4831) for more detail).
 
-ASO now issues a fresh `GET` on the owner ARM resource before calling `PreReconcileOwnerCheck`, ensuring the check always operates on the latest owner status ([#5140](https://github.com/Azure/azure-service-operator/pull/5140)). The `owner` parameter has also been removed from `PreReconcileCheck` to enforce a cleaner separation of concerns between the two extension points.
+ASO now issues a fresh `GET` on the owner ARM resource before calling `PreReconcileOwnerCheck`, ensuring the check always operates on the latest owner status ([#5140](https://github.com/Azure/azure-service-operator/pull/5140)). This should result in faster goal state convergence for complex resource graphs.
 
-Support for the `allowMultiEnvManagement` configuration flag allows per-namespace/per-resource Azure cloud environment settings, allowing uesrs to manage resources across different Azure clouds/environments. 
+Support for the `allowMultiEnvManagement` configuration flag allows per-namespace/per-resource Azure cloud environment settings, allowing users to manage resources across different Azure clouds/environments.
+
 - Special thanks to [subhamrajvanshi](https://github.com/shubhamrajvanshi) for this contribution.
 
 ## ⚠️ Breaking changes
 
-This release includes breaking changes. Please review the [breaking changes documentation](https://azure.github.io/azure-service-operator/guide/breaking-changes/) before upgrading.
+This release includes breaking changes. Please review [breaking changes in v2.18](https://azure.github.io/azure-service-operator/guide/breaking-changes/breaking-changes-v2.18.0/) before upgrading.
 
-### Removed AKS API versions
+- The `containerservice` ManagedCluster and AgentPool API versions `v1api20230201` and `v1api20231001` have been removed, as [previously announced](https://github.com/Azure/azure-service-operator/releases/tag/v2.17.0).
 
-This release removes the `containerservice` ManagedCluster and AgentPool API versions `v1api20230201` and `v1api20231001`, as [previously announced](https://github.com/Azure/azure-service-operator/releases/tag/v2.17.0).
-
-* If you allow the operator to manage its own CRDs via `--crd-pattern`, no action is needed—the operator handles removing these versions automatically.
-* If you manage CRD versions yourself, you must run [asoctl clean crds](https://azure.github.io/azure-service-operator/tools/asoctl/#clean-crds) before upgrading.
-
-### Upcoming breaking changes
+- The API version `2024-01-01-preview` of `insights` has been removed as it was deprecated and removed upstream by Azure. Users of this API version should move to a supported version before upgrading ASO.
 
 In [ASO v2.19](https://github.com/Azure/azure-service-operator/milestone/38), we will remove `containerservice` ManagedCluster and AgentPool API version `v1api20240402preview`.
 
@@ -60,11 +56,11 @@ ASO no longer gives up [retrying on common Azure errors](https://github.com/Azur
 
 ### Smarter deletes
 
-Before issuing a DELETE request to Azure, [ASO now checks](https://github.com/Azure/azure-service-operator/pull/5040) if the resource or the resource's parent has already been removed.
+Before issuing a DELETE request to Azure, [ASO may now check](https://github.com/Azure/azure-service-operator/pull/5040) if the resource or the resource's parent has already been removed. We will progressively enable this for all resources over the next few releases.
 
-### Remove usage of `NewDefaultAzureCredential`
+### Limiting credentials
 
-`NewDefaultAzureCredential` is replaced with `NewChainedTokenCredential` alongside a more [limited set of credentials](https://github.com/Azure/azure-service-operator/pull/5155). Authentication options that were removed were generally not recommended for running in production.
+We have improved the security of ASO and `asoctl` by limiting the credentials used for authentication. Use of `NewDefaultAzureCredential` has been replaced with `NewChainedTokenCredential` alongside a more [limited set of credentials](https://github.com/Azure/azure-service-operator/pull/5155). Authentication options that were removed were generally not recommended for running in production.
 
 ## 🐛 Bug fixes
 
